@@ -58,15 +58,15 @@ def main():
         sys.exit(1)
 
     while True:
-        print("\nOptions :")
-        print("  1. Supprimer les mails d'un expéditeur")
-        print("  2. Lister les dossiers")
-        print("  3. Quitter")
-        choice = input("\nChoix : ").strip()
+        print("\n[1] Supprimer par expéditeur  [2] Lister les dossiers  [3] Quitter")
+        print("Ou colle directement une adresse email pour la supprimer :")
+        choice = input("> ").strip()
 
-        if choice == "1":
-            sender = input("Adresse de l'expéditeur à supprimer : ").strip()
-            folder = input("Dossier (INBOX par défaut, Entrée pour confirmer) : ").strip() or "INBOX"
+        if "@" in choice:
+            delete_by_sender(mail, choice)
+        elif choice == "1":
+            sender = input("Adresse de l'expéditeur : ").strip()
+            folder = input("Dossier (Entrée = INBOX) : ").strip() or "INBOX"
             delete_by_sender(mail, sender, folder)
         elif choice == "2":
             list_folders(mail)
@@ -75,7 +75,7 @@ def main():
             print("Déconnecté.")
             break
         else:
-            print("Choix invalide.")
+            print("Choix invalide. Entre 1, 2, 3 ou colle une adresse email.")
 
 
 if __name__ == "__main__":
