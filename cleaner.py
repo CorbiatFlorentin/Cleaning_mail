@@ -1,15 +1,24 @@
 import imaplib
-import email
-import getpass
 import sys
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 YAHOO_IMAP = "imap.mail.yahoo.com"
 YAHOO_PORT = 993
 
 
-def connect(user: str, app_password: str) -> imaplib.IMAP4_SSL:
+def connect() -> imaplib.IMAP4_SSL:
+    user = os.getenv("YAHOO_EMAIL")
+    password = os.getenv("YAHOO_APP_PASSWORD")
+
+    if not user or not password:
+        print("Erreur : YAHOO_EMAIL ou YAHOO_APP_PASSWORD manquant dans le fichier .env")
+        sys.exit(1)
+
     mail = imaplib.IMAP4_SSL(YAHOO_IMAP, YAHOO_PORT)
-    mail.login(user, app_password)
+    mail.login(user, password)
     return mail
 
 
@@ -40,11 +49,9 @@ def list_folders(mail: imaplib.IMAP4_SSL):
 
 def main():
     print("=== Yahoo Mail Cleaner ===\n")
-    user = input("Adresse Yahoo : ").strip()
-    app_password = getpass.getpass("Mot de passe d'application Yahoo : ")
 
     try:
-        mail = connect(user, app_password)
+        mail = connect()
         print("Connecté !\n")
     except imaplib.IMAP4.error as e:
         print(f"Erreur de connexion : {e}")
