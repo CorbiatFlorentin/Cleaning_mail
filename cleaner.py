@@ -32,9 +32,8 @@ def delete_by_sender(mail: imaplib.IMAP4_SSL, sender: str, folder: str = "INBOX"
         return 0
 
     print(f"{len(ids)} mail(s) trouvé(s) de {sender}. Suppression...")
-    for num in ids:
-        mail.store(num, "+FLAGS", "\\Deleted")
-
+    id_list = b",".join(ids)
+    mail.store(id_list, "+FLAGS", "\\Deleted")
     mail.expunge()
     print(f"✓ {len(ids)} mail(s) supprimé(s).")
     return len(ids)
